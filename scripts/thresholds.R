@@ -57,7 +57,9 @@ readPerms <- function(filebase, i1, i2, nid, nsnp, d, threshold, top) {
 }
 
 
-perm <- readPerms("res_0.99_", 1, 50, 846, 303123, 1, c(7,7), 50)
+perm <- readPerms("res_0.99_", 1, 500, 846, 303123, 1, c(7,7), 50)
+
+library(plyr)
 
 thresh <- ddply(subset(perm, Rank == 1), c("chip", "N", "Test"), function(x) {
 	a <- sort(x$pval, decreasing=T)[nrow(x) * 0.05]
@@ -80,12 +82,13 @@ effectiveNumber <- function(pval)
 estimatedThres <- function(total.snp, subset.snp, pval)
 {
 	eff.subset <- effectiveNumber(pval)
+	cat(eff.subset, "\n")
 	eff.snp <- eff.subset * (total.snp / subset.snp)
 	cat(eff.snp, "\n")
 	return(-log10(0.05 / (eff.snp * (eff.snp-1)/2)))
 }
 
-estimatedThres(3240851, 303123, pval)
+estimatedThres(3240851, 303123, 10^-thresh$V1[2])
 
 
 
