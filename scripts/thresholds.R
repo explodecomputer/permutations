@@ -91,16 +91,11 @@ estimatedThres <- function(total.snp, subset.snp, pval)
 estimatedThres(3240851, 303123, 10^-thresh$V1[2])
 estimatedThres(5009044, 469675, 10^-thresh$V1[2])
 
-
-
 a <- ddply(perm, .(perm), function(x)
 {
 	x <- mutate(x)
 	return(max(x$pval))
 	})
-
-
-
 
 pthresh <- function(n, m, ntrait=1)
 {
@@ -111,7 +106,6 @@ pthresh <- function(n, m, ntrait=1)
 	a <- 13
 
 	thresh <- a - a/(s1 * exp(log(n)/s2) + s3 * exp(log(m)/s4))
-
 	# effective number of tests:
 	et <- 0.05 / 10^-thresh
 	thresh <- 0.05 / (et*ntrait)
