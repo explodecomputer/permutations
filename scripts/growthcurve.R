@@ -14,7 +14,7 @@ expDecay2D <- function(x1, x2, C, k1, k2)
 {
 	stopifnot(k1 > 0)
 	stopifnot(k2 > 0)
-	y <- C * (1 - exp(-k1*x1)/2 - exp(-k2*x2)/2)
+	y <- C * (1 - exp(-k1*x1) - exp(-k2*x2) + exp(-k1*x1-k2*x2))
 	return(y)
 }
 
@@ -22,7 +22,7 @@ x1 <- seq(1, 10000, by=100)
 x2 <- seq(1, 10000, by=100)
 
 dat <- expand.grid(x1=x1, x2=x2, y=NA)
-dat$y <- expDecay2D(dat$x1, dat$x2, 1, 0.0005, 0.0001)
+dat$y <- expDecay2D(dat$x1, dat$x2, 1, 0.0005, 0.001)
 
 wireframe(y ~ x1 * x2, data=dat, drape=T)
 max(dat$y)

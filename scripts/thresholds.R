@@ -82,6 +82,7 @@ effectiveNumber <- function(pval)
 estimatedThres <- function(total.snp, subset.snp, pval)
 {
 	eff.subset <- effectiveNumber(pval)
+	cat(eff.subset, "\n")
 	eff.snp <- eff.subset * (total.snp / subset.snp)
 	cat(eff.snp, "\n")
 	return(-log10(0.05 / (eff.snp * (eff.snp-1)/2)))
@@ -89,8 +90,6 @@ estimatedThres <- function(total.snp, subset.snp, pval)
 
 estimatedThres(3240851, 303123, 10^-thresh$V1[2])
 estimatedThres(5009044, 469675, 10^-thresh$V1[2])
-
-
 
 a <- ddply(perm, .(perm), function(x)
 {
