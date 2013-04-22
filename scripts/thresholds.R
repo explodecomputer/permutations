@@ -57,10 +57,10 @@ readPerms <- function(filebase, i1, i2, nid, nsnp, d, threshold, top) {
 }
 
 
-perm <- readPerms("res_0.99_", 1, 500, 846, 303123, 1, c(7,7), 50)
+perm <- readPerms("../results/res_0.99_", 1, 500, 846, 303123, 1, c(7,7), 50)
+perm <- readPerms("../results/res_0.95_", 1, 270, 846, 469675, 1, c(7,7), 50)
 
 library(plyr)
-
 thresh <- ddply(subset(perm, Rank == 1), c("chip", "N", "Test"), function(x) {
 	a <- sort(x$pval, decreasing=T)[nrow(x) * 0.05]
 	return(a)
@@ -89,6 +89,41 @@ estimatedThres <- function(total.snp, subset.snp, pval)
 }
 
 estimatedThres(3240851, 303123, 10^-thresh$V1[2])
+estimatedThres(5009044, 469675, 10^-thresh$V1[2])
 
 
+
+a <- ddply(perm, .(perm), function(x)
+{
+	x <- mutate(x)
+	return(max(x$pval))
+	})
+
+
+
+
+pthresh <- function(n, m, ntrait=1)
+{
+	s1 <- 0.0258
+	s2 <- 1.72
+	s3 <- 0.0379
+	s4 <- 2.33
+	a <- 13
+
+	thresh <- a - a/(s1 * exp(log(n)/s2) + s3 * exp(log(m)/s4))
+
+	# effective number of tests:
+	et <- 0.05 / 10^-thresh
+	thresh <- 0.05 / (et*ntrait)
+
+	return(thresh)
+}
+
+# Bonferroni
+bthresh <- function(m, ntrait=1)
+{
+	0.05/(ntrait*m*(m-1)/2)
+}
+
+-log10(pthresh(846, 5000000))
 
