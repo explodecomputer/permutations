@@ -1,3 +1,4 @@
+library(plyr)
 
 
 readPerms <- function(filebase, i1, i2, nid, nsnp, d, threshold, top) {
@@ -56,16 +57,6 @@ readPerms <- function(filebase, i1, i2, nid, nsnp, d, threshold, top) {
 	return(perm)
 }
 
-
-perm <- readPerms("../results/res_0.99_", 1, 500, 846, 303123, 1, c(7,7), 50)
-perm <- readPerms("../results/res_0.95_", 1, 270, 846, 469675, 1, c(7,7), 50)
-
-library(plyr)
-thresh <- ddply(subset(perm, Rank == 1), c("chip", "N", "Test"), function(x) {
-	a <- sort(x$pval, decreasing=T)[nrow(x) * 0.05]
-	return(a)
-})
-
 solveQuad <- function(A, B, C)
 {
 	top <- -B + sqrt(B^2 - 4*A*C) * c(-1, 1)
@@ -79,7 +70,7 @@ effectiveNumber <- function(pval)
 }
 
 
-estimatedThres <- function(total.snp, subset.snp, pval)
+estimatedThresh <- function(total.snp, subset.snp, pval)
 {
 	eff.subset <- effectiveNumber(pval)
 	cat(eff.subset, "\n")
@@ -87,15 +78,6 @@ estimatedThres <- function(total.snp, subset.snp, pval)
 	cat(eff.snp, "\n")
 	return(-log10(0.05 / (eff.snp * (eff.snp-1)/2)))
 }
-
-estimatedThres(3240851, 303123, 10^-thresh$V1[2])
-estimatedThres(5009044, 469675, 10^-thresh$V1[2])
-
-a <- ddply(perm, .(perm), function(x)
-{
-	x <- mutate(x)
-	return(max(x$pval))
-	})
 
 pthresh <- function(n, m, ntrait=1)
 {
@@ -119,5 +101,53 @@ bthresh <- function(m, ntrait=1)
 	0.05/(ntrait*m*(m-1)/2)
 }
 
--log10(pthresh(846, 5000000))
+
+rtdir <- "~/repo/permutations/results/"
+sets <- c("res_0.99_", "res_0.95_", "res_0.95_unrel_", "res_1kg_")
+N <- c(846, 846, 329, 379)
+m <- c(303123, 469675, 469675, 553580)
+M <- c(3240851, 5009044, 5009044, 5981319)
+param <- data.frame(sets, N, m, M)
+
+perm <- dlply(param, .(sets), .progress="text", function(x)
+{
+	x <- mutate(x)
+	a <- readPerms(paste(rtdir, x$sets, sep=""), 1, 500, x$N, x$m, x$sets, c(7,7), 50)
+	return(a)
+})
+
+ddply(param, .(sets), function(x)
+{
+	x <- mutate(x)
+	a <- perm[[x$sets]]
+
+	thresh <- ddply(subset(a, Rank == 1), c("chip", "N", "Test"), function(x) {
+		a <- sort(x$pval, decreasing=T)[nrow(x) * 0.05]
+		return(a)
+	})
+	names(thresh)[4] <- "thresh1"
+	thresh$M <- x$M
+	thresh$sets <- x$sets
+
+	for(i in 1:nrow(thresh))
+	{
+		thresh$thresh2[i] <- estimatedThresh(thresh$M[i], thresh$chip[i], 10^-thresh$thresh1[i])
+		thresh$bthresh[i] <- -log10(bthresh(thresh$M[i]))
+	}
+
+	return(thresh)
+})
+
+save(thresh, perm, param, file=paste(rtdir, "perm_results.RData", sep=""))
+
+
+
+
+
+######################
+
+
+
+
+
 
