@@ -5,7 +5,7 @@
 #PBS -l select=1:ncpus=12:ngpus=1:mem=4000mb
 #PBS -l place=excl
 #PBS -N unrel95
-#PBS -t 251-500
+#PBS -J 251-500
 #PBS -l walltime=12:00:00
 #PBS -o job_reports/
 #PBS -e job_reports/
