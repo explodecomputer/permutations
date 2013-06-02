@@ -2,13 +2,13 @@
 
 #PBS -A Desc006
 #PBS -l nodes=1:gpus=1
-#PBS -l pmem=4000MB
 #PBS -N aric2500
-#PBS -t 1-250
+#PBS -t 1-550
 #PBS -l walltime=12:00:00
 #PBS -o job_reports/
 #PBS -e job_reports/
 #PBS -d /home/josephp/Desc006/repo/permutations/run_aric2500
+#PBS -M g.hemani@uq.edu.au
 
 set -e
 
