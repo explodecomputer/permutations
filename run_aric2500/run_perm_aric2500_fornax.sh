@@ -5,7 +5,7 @@
 #PBS -l select=1:ncpus=12:ngpus=1:mem=4000mb
 #PBS -l place=excl
 #PBS -N aric2500
-#PBS -J 251-500
+#PBS -J 1-250
 #PBS -l walltime=12:00:00
 #PBS -o job_reports/
 #PBS -e job_reports/
@@ -24,6 +24,10 @@ phen="${rtdir}data/phen_aric2500.txt"
 output="${rtdir}results/res_aric2500_${id}.txt"
 
 cd /home/ghemani/repo/permutations/run_aric2500
+
+if [ -f results/res_aric2500_${id}.RData ]; then
+  exit
+fi
 
 ${epiGPU} -A ${data} ${output} -p ${id} -i 2048 -t i -F 8 -I 13 -P ${phen}
 
