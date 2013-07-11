@@ -12,6 +12,19 @@ readPerm <- function(filename)
 }
 
 
+readPermOld <- function(filename)
+{
+	if(file.exists(filename))
+	{
+		dat <- read.table(filename, header=T,
+			colClasses=c("numeric", "character", "numeric", "character", "numeric", "numeric", "numeric", "numeric"))
+		return(dat)
+	} else {
+		cat(filename, "missing")
+	}
+}
+
+
 cleanPerm <- function(dat)
 {
 	dat$Fval[dat$df1 < 1] <- NA
@@ -34,6 +47,7 @@ cleanPerm <- function(dat)
 	return(dat)
 }
 
+
 makeSummary <- function(dat, machine, top)
 {
 	n <- min(top, nrow(dat))
@@ -47,9 +61,15 @@ makeSummary <- function(dat, machine, top)
 }
 
 
-writeSummary <- function(filename, machine, top, outfile)
+writeSummary <- function(filename, machine, top, outfile, old="")
 {
-	datsum <- makeSummary(cleanPerm(readPerm(filename)), machine, top)
+	if(old == "old")
+	{
+		dat <- readPermOld(filename)
+	} else {
+		dat <- readPerm(filename)
+	}
+	datsum <- makeSummary(cleanPerm(dat), machine, top)
 	save(datsum, file=outfile)
 }
 
@@ -66,6 +86,7 @@ last <- as.numeric(arguments[3])
 top <- as.numeric(arguments[4])
 rootout <- arguments[5]
 machine <- arguments[6]
+old <- arguments[7]
 
 
 #=======================================================#
@@ -84,6 +105,6 @@ for(i in first:last)
 		cat(i, "\n")
 	}
 
-	writeSummary(filein, machine, top, fileout)
+	writeSummary(filein, machine, top, fileout, old)
 }
 

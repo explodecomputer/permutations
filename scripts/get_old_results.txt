@@ -1,0 +1,41 @@
+R --no-save --args ../results/res_aric2500_@.txt.gz 1 500 20 ../run_aric2500/results/res_aric2500_@.RData massive < summarisePermutations.R
+
+R --no-save --args ../results/res_1kg_@.txt.gz 1 1000 20 ../run_1kg/results/res_1kg_@.RData massive < summarisePermutations.R
+
+R --no-save --args ../results/res_0.95_unrel_@.txt.gz 1 500 20 ../run_0.95_unrel/results/res_0.95_unrel_@.RData massive < summarisePermutations.R
+
+R --no-save --args ../results/res_0.95_@.txt.gz 1 500 20 ../run_0.95/results/res_0.95_@.RData massive < summarisePermutations.R
+
+R --no-save --args ../results/res_0.99_@.txt.gz 1 500 20 ../run_0.99/results/res_0.99_@.RData massive < summarisePermutations.R
+
+
+
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results/out_@ 1 1000 20 ~/repo/permutations/run_300_2500/results/res_300_2500_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results2/out_@ 1 1000 20 ~/repo/permutations/run_300_1250/results/res_300_1250_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results3/out_@ 1 1000 20 ~/repo/permutations/run_300_625/results/res_300_625_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results4/out_@ 1 1000 20 ~/repo/permutations/run_600_2500/results/res_600_2500_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results5/out_@ 1 1000 20 ~/repo/permutations/run_600_1250/results/res_600_1250_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results6/out_@ 1 1000 20 ~/repo/permutations/run_600_625/results/res_600_625_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results7/out_@ 1 1000 20 ~/repo/permutations/run_150_2500/results/res_150_2500_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results8/out_@ 1 1000 20 ~/repo/permutations/run_150_1250/results/res_150_1250_@.RData cseht old < summarisePermutations.R
+
+R --no-save --args ~/repo/s0793293/ID4117/perm_results9/out_@ 1 1000 20 ~/repo/permutations/run_150_625/results/res_150_625_@.RData cseht old < summarisePermutations.R
+
+
+
+param <- expand.grid(N = c(2500, 1250, 625), chip = c(300, 600, 150))
+
+param$folder <- c("../ID4117/perm_results/out_", paste("../ID4117/perm_results", 2:6, "/out_", sep=""), paste("../ID4117/perm_resultsa", 7:9, "/out_", sep=""))
+
+
+
+
+
